@@ -1,14 +1,14 @@
 import pyaudio
 import wave
 
-def record_voice(output_path, chunk_record_time = 1):
-
+def record_voice(output_path, format = pyaudio.paInt16, rate = 16000, chunk = 1024, channels = 1, chunk_record_time = 5):
+    #print("recording voice")
     frames = []
 
-    format = pyaudio.paInt16
-    rate = 16000
-    chunk = 1024
-    channels = 1
+    format = format
+    rate = rate
+    chunk = chunk
+    channels = channels
 
     audio = pyaudio.PyAudio()
 
@@ -18,7 +18,7 @@ def record_voice(output_path, chunk_record_time = 1):
     frames = []
 
     for i in range(0, int(rate/chunk * chunk_record_time)):
-        data = stream.read(chunk)
+        data = stream.read(chunk, exception_on_overflow = True)
         frames.append(data)
     
     stream.stop_stream()
@@ -30,13 +30,14 @@ def record_voice(output_path, chunk_record_time = 1):
     wf.setframerate(rate)
     wf.writeframes(b''.join(frames))
     wf.close()
+    #print("Recording saved")
 
 
-def push_to_talk_start(stream, audio, frames):
-    format = pyaudio.paInt16
-    rate = 16000
-    chunk = 1024
-    channels = 1
+def push_to_talk_start(stream, audio, frames, format = pyaudio.paInt16, rate = 16000, chunk = 1024, channels = 1):
+    format = format
+    rate = rate
+    chunk = chunk
+    channels = channels
 
     data = stream.read(chunk)
     frames.append(data)
